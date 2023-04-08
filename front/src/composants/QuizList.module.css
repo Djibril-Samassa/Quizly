@@ -1,0 +1,8 @@
+.container{
+  margin: 5em 0;
+}
+
+.list {
+  display: flex;
+  justify-content: space-between;
+}

@@ -1,0 +1,41 @@
+.container {
+    justify-content: space-between;
+    padding: 2em 10em;
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    width: 10%;
+}
+
+.nav {
+    display: flex;
+    justify-content: space-between;
+}
+
+.nav>li {
+    list-style: none;
+    margin: 0em 2em;
+}
+
+.nav>li>a {
+    font-weight: bold;
+    font-size: 20px;
+    color: rgb(33, 33, 33);
+    text-decoration: none;
+}
+
+.nav>li>a:hover {
+    padding-bottom: 5px;
+    border-bottom: 3px solid #fff;
+}
+
+.logout {
+    background-color: #fff;
+}
+
+.logout:hover {
+    background-color: #c04343;
+    color: #f1f1f1;
+}

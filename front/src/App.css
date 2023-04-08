@@ -1,0 +1,37 @@
+@font-face {
+  font-family: "Poppins";
+  src: url("../public/Poppins/Poppins-Regular.ttf");
+}
+
+.App {
+  min-height: 100vh;
+  background-color: #efcb68;
+  font-family: "Poppins";
+  /* text-align: center; */
+}
+
+.yellow {
+  background-color: #efcb68;
+}
+
+.button {
+  color: black;
+  text-decoration: none;
+  padding: 9px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  transform: scale(1);
+  transition-duration: 300ms;
+}
+
+.button:hover {
+  transform: scale(1.1);
+}
+
+.image {
+  max-width: 400px;
+}
+
+.technos{
+  margin-right: 10em;
+}

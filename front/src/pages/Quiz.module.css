@@ -1,0 +1,15 @@
+.container {
+    padding: 2em 5em;
+}
+
+.option {
+    display: flex;
+}
+
+.option>h2 {
+    margin: 0px 10px;
+}
+
+.selected {
+    background-color: #f1f1f1
+}

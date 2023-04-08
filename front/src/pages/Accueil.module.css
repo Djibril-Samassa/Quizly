@@ -1,0 +1,25 @@
+.container {
+    padding: 0em 5em;
+    text-align: left;
+}
+
+.annonce {
+    position: relative;
+}
+
+.annonce>h3 {
+    background-color: #fff;
+    width: fit-content;
+    padding: 9px 15px;
+    border-radius: 10px;
+}
+
+
+.content>div {
+    justify-content: space-between;
+    display: flex;
+}
+
+.content>div:nth-child(1) {
+    max-width: 80%;
+}
