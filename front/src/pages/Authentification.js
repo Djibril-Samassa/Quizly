@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 export default function Authentification(props) {
     const Redirect = useNavigate()
     const [action, setAction] = useState("connexion")
+    const [didCreateAccount, setDidCreateAccount] = useState(false)
     useEffect(() => {
         props.isLoggedIn ?
             Redirect("/") : null
@@ -17,7 +18,7 @@ export default function Authentification(props) {
 
         <div className={Style.pageContainer} >
             <div>
-                {action === "inscription" ? <Inscription /> : action === "connexion" ? <Connexion /> : null}
+                {action === "inscription" ? <Inscription setDidCreateAccount={setDidCreateAccount} setAction={setAction} /> : action === "connexion" ? <Connexion didCreateAccount={didCreateAccount} /> : null}
                 {action === "inscription" ?
                     <p>Vous avez déjà un compte ? <span className={Style.link} onClick={() => { setAction('connexion') }}>Connectez vous</span></p>
                     : action === "connexion" ?

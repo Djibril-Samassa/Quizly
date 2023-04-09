@@ -15,36 +15,42 @@ export default function CreateQuiz(props) {
         questions: []
     });
     const [choosen, setChoosen] = useState();
+    const [decoded, setDecoded] = useState({})
     const [finish, setFinish] = useState(false);
     const [isNotEmpty, setIsNotEmpty] = useState(false)
     const redirect = useNavigate();
 
     useEffect(() => {
         const decoded = jwt_decode(localStorage.token)
+        setDecoded(decoded)
         const checkStorage = () => {
             const localQuiz = JSON.parse(localStorage.getItem('selectedQuiz'))
-            localStorage.selectedQuiz ? (setQuestion(localQuiz.questions[counter]), setIsEditing(true), setDidUpdated(true), setState(localQuiz)) : setState({ ...state, user_id: decoded.userId })
+            localStorage.selectedQuiz ? (setQuestion(localQuiz.questions[counter]), setIsEditing(true), setDidUpdated(true), setState(localQuiz)) : null
         }
         checkStorage()
     }, [])
 
     useEffect(() => {
-        props.clear ? (setState({ ...state, title: '', sujet: '', description: '' }), setQuestion({}), setCounter(0), setIsEditing(false)) : null
-        console.log(props.clear, state)
-    }, [props])
+        localStorage.selectedQuiz ? null : setState({ ...state, user_id: decoded.userId })
+    }, [decoded])
 
-    useEffect(() => { console.log(state) }, [state])
 
     useEffect(() => {
-        question.question &&
-            question.reponseA &&
-            question.reponseB &&
-            question.reponseC &&
-            question.reponseD ? setIsNotEmpty(true) : setIsNotEmpty(false)
+        props.clear ? (setState({ ...state, title: '', about: '', description: '' }), setQuestion({}), setCounter(0), setIsEditing(false)) : null
+    }, [props])
+
+
+    useEffect(() => {
+        question?.question &&
+            question?.reponseA &&
+            question?.reponseB &&
+            question?.reponseC &&
+            question?.reponseD ? setIsNotEmpty(true) : setIsNotEmpty(false)
     }, [question, state, counter, finish, choosen])
 
     useEffect(() => {
         isEditing ? setQuestion(state?.questions[counter]) : null
+        counter >= 4 ? setFinish(true) : null
     }, [counter])
 
     const handleCheckResponses = (reponse) => {
@@ -68,21 +74,29 @@ export default function CreateQuiz(props) {
         setCounter(counter + 1)
     };
 
-    useEffect(() => {
-
-    }, [])
 
     const handleValidateQuiz = () => {
-        state.questions.push(question);
+        question?.bonneReponse ? state?.questions?.push(question) : null;
+        setQuestion({})
         state.title &&
             state.description &&
             state.about &&
             state.questions.length >= 4 &&
-            state.user_id !== null
+            state.user_id !== ""
             ?
             didUpdated ?
-                null
-                /* ROUTE DE MODIF */
+                axios
+                    .put("http://localhost:8000/quiz/update", state)
+                    .then((res) => {
+                        alert("Votre quiz a bien été modifié ✅");
+                        localStorage.removeItem("fromProfile")
+                        localStorage.removeItem("selectedQuiz")
+                        props.setAction('play')
+                        window.location.reload()
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    })
                 :
                 axios
                     .post("http://localhost:8000/quiz/create", state)
@@ -93,7 +107,8 @@ export default function CreateQuiz(props) {
                     .catch((err) => {
                         console.log(err);
                     })
-            : alert(
+            :
+            alert(
                 "Veuillez remplir tous les champs à propos du formulaire(à gauche)"
             );
     };
@@ -107,7 +122,7 @@ export default function CreateQuiz(props) {
                         <span>
                             <label for="title">Titre du Quiz</label>
                             <input
-                                value={state.title}
+                                value={state?.title}
                                 className={Style.input}
                                 onChange={(e) => setState({ ...state, title: e.target.value })}
                                 type="text"
@@ -118,7 +133,7 @@ export default function CreateQuiz(props) {
                         <span>
                             <label for="title">Sujet du Quiz</label>
                             <input
-                                value={state.about}
+                                value={state?.about}
                                 className={Style.input}
                                 onChange={(e) => setState({ ...state, about: e.target.value })}
                                 type="text"
@@ -129,7 +144,7 @@ export default function CreateQuiz(props) {
                         <span>
                             <label for="title">Description</label>
                             <textarea
-                                value={state.description}
+                                value={state?.description}
                                 className={Style.descriptionInput}
                                 onChange={(e) =>
                                     setState({ ...state, description: e.target.value })
@@ -160,7 +175,7 @@ export default function CreateQuiz(props) {
                             <span>
                                 <label for="title">Réponse A</label>
                                 <input
-                                    value={question.reponseA ? question.reponseA : ""}
+                                    value={question?.reponseA ? question.reponseA : ""}
                                     className={Style.input}
                                     onChange={(e) =>
                                         setQuestion({ ...question, reponseA: e.target.value })
@@ -171,7 +186,7 @@ export default function CreateQuiz(props) {
                             <span>
                                 <label for="title">Réponse B</label>
                                 <input
-                                    value={question.reponseB ? question.reponseB : ""}
+                                    value={question?.reponseB ? question.reponseB : ""}
                                     className={Style.input}
                                     onChange={(e) =>
                                         setQuestion({ ...question, reponseB: e.target.value })
@@ -182,7 +197,7 @@ export default function CreateQuiz(props) {
                             <span>
                                 <label for="title">Réponse C</label>
                                 <input
-                                    value={question.reponseC ? question.reponseC : ""}
+                                    value={question?.reponseC ? question.reponseC : ""}
                                     className={Style.input}
                                     onChange={(e) =>
                                         setQuestion({ ...question, reponseC: e.target.value })
@@ -193,7 +208,7 @@ export default function CreateQuiz(props) {
                             <span>
                                 <label for="title">Réponse D</label>
                                 <input
-                                    value={question.reponseD ? question.reponseD : ""}
+                                    value={question?.reponseD ? question.reponseD : ""}
                                     className={Style.input}
                                     onChange={(e) =>
                                         setQuestion({ ...question, reponseD: e.target.value })
@@ -276,7 +291,7 @@ export default function CreateQuiz(props) {
                                         }}
                                         className={`onHover ${Style.next}`}
                                     >
-                                        Ajouter la question et {didUpdated ? "sauvegarder les modifications" : "creér le quiz"}
+                                        {isNotEmpty ? "Ajouter la question et" : null} {didUpdated ? "sauvegarder les modifications" : "creér le quiz"}
                                     </span>
                                 ) : null}
                             </div>

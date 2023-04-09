@@ -5,111 +5,106 @@ import axios from "axios";
 import Style from "../pages/Authentification.module.css"
 import { useNavigate } from "react-router-dom";
 
-export default function Inscription() {
+export default function Inscription(props) {
     const redirect = useNavigate();
-    const [firstname, setFirstname] = useState("");
-    const [lastname, setLastname] = useState("");
-    const [email, setEmail] = useState("");
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
+    const [userData, setUserData] = useState({
+        firstname: '',
+        lastname: '',
+        email: '',
+        username: '',
+        password: ''
+    });
+    const [userDoesExist, setUserDoesExist] = useState("")
     const [confirmpw, setConfirmpw] = useState("");
     const [passwordMatch, setPasswordMatch] = useState();
     const [formError, setFormError] = useState();
     const errorMessage = {
         doesNoMatch: "Mots de passe non identiques",
-        emptyField: "Veuillez remplir tous les champ",
-    };
-
-
-    const data = {
-        firstname: firstname,
-        lastname: lastname,
-        email: email,
-        username: username,
-        password: password,
     };
 
     const handleCheckPassword = (value) => {
         setConfirmpw(value);
-        value === password ? setPasswordMatch(true) : setPasswordMatch(false);
+        value === userData.password ? setPasswordMatch(true) : setPasswordMatch(false);
     };
 
     const handleSubmit = (data) => {
-        firstname && lastname && email && username && password && passwordMatch
+        event.preventDefault()
+        userData.firstname && userData.lastname && userData.email && userData.username && userData.password.length >= 8 && passwordMatch
             ? axios
                 .post("http://localhost:8000/inscription", data)
                 .then((res) => {
-                    alert("Votre compte a bien été créé ✅");
+                    props.setDidCreateAccount(true)
+                    props.setAction("connexion")
                     localStorage.setItem("email", email)
-                    redirect("/connexion");
+                    alert("Votre compte a bien été créé ✅");
                 })
                 .catch((err) => {
-                    console.log(err);
+                    setUserDoesExist(err?.response?.data?.message)
                 })
             : setFormError(true);
     };
 
     return (
         <div>
-            <form className={Style.formulaire}>
+            <form className={Style.formulaire} onSubmit={() => { handleSubmit(userData) }}>
                 <h3>Rejoignez la communauté</h3>
                 <span className={Style.inputContainer}>
-                    <label for="prenom">Prenom</label>
+                    <label for="prenom">Prenom <span style={{ color: "red" }}>*</span></label>
                     <input
-                        value={firstname}
+                        value={userData.firstname}
                         onChange={(e) => {
-                            setFirstname(e.target.value);
+                            setUserData({ ...userData, firstname: e.target.value });
                         }}
                         type="text"
                         required
                     />
                 </span>
                 <span className={Style.inputContainer}>
-                    <label for="nom">Nom</label>
+                    <label for="nom">Nom <span style={{ color: "red" }}>*</span></label>
                     <input
-                        value={lastname}
+                        value={userData.lastname}
                         onChange={(e) => {
-                            setLastname(e.target.value);
+                            setUserData({ ...userData, lastname: e.target.value });
                         }}
                         type="text"
                         required
                     />
                 </span>
                 <span className={Style.inputContainer}>
-                    <label for="email">Adresse e-mail</label>
+                    <label for="email">Adresse e-mail <span style={{ color: "red" }}>*</span></label>
                     <input
-                        value={email}
+                        value={userData.email}
                         onChange={(e) => {
-                            setEmail(e.target.value);
+                            setUserData({ ...userData, email: e.target.value });
                         }}
                         type="email"
                         required
                     />
                 </span>
                 <span className={Style.inputContainer}>
-                    <label for="username">Nom d'utilisateur</label>
+                    <label for="username">Nom d'utilisateur <span style={{ color: "red" }}>*</span></label>
                     <input
-                        value={username}
+                        value={userData.username}
                         onChange={(e) => {
-                            setUsername(e.target.value);
+                            setUserData({ ...userData, username: e.target.value });
                         }}
                         type="text"
                         required
                     />
                 </span>
                 <span className={Style.inputContainer}>
-                    <label for="password">Mot de passe</label>
+                    <label for="password">Mot de passe <span style={{ color: "red" }}>*</span></label>
                     <input
-                        value={password}
+                        value={userData.password}
                         onChange={(e) => {
-                            setPassword(e.target.value);
+                            setUserData({ ...userData, password: e.target.value });
                         }}
                         type="password"
                         required
                     />
                 </span>
                 <span className={Style.inputContainer}>
-                    <label for="confirmpassword">Confirmez votre mot de passe</label>
+                    <label for="confirmpassword">Confirmez votre mot de passe <span style={{ color: "red" }}>*</span></label>
                     <input
                         value={confirmpw}
                         onChange={(e) => {
@@ -121,28 +116,21 @@ export default function Inscription() {
                 </span>
                 {formError ? (
                     <div>
-                        {passwordMatch ? null : (
-                            <p className="error">{errorMessage.doesNoMatch}</p>
+                        {formError && !passwordMatch && userData.password.length > 0 && confirmpw.length > 0 ? <p style={{ color: "red" }} className="error">{errorMessage.doesNoMatch}</p> : (
+                            null
                         )}
-
-                        {!firstname ||
-                            !lastname ||
-                            !email ||
-                            !username ||
-                            !password ||
-                            !confirmpw ? (
-                            <p className="error"> {errorMessage.emptyField}</p>
-                        ) : null}
                     </div>
                 ) : null}
-                <div
-                    onClick={() => {
-                        handleSubmit(data);
-                    }}
+                <p>Les champs marqués d'une <span style={{ color: 'red' }}>*</span> sont obligatoires</p>
+                {formError && userData.password.length < 8 ? <p style={{ color: 'red' }}>Votre mot de passe doit comporter au moins 8 caractères</p> : null}
+                <p>{userDoesExist}</p>
+                <button
                     className={`${Style.inscription} button`}
+                    type="submit"
+                    disabled={userData.firstname && userData.lastname && userData.username && userData.email && userData.password && !passwordMatch && formError && confirmpw}
                 >
                     S'inscrire
-                </div>
+                </button>
             </form>
         </div>
     )

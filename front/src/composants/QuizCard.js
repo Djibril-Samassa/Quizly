@@ -7,13 +7,14 @@ import Style from "./QuizCard.module.css";
 
 export default function QuizCard(props) {
   // niveau back faire un post de l'id du quiz selectionné => PlayQuiz
-  const [isCreator, setIsCreator] = useState({})
+  const [isCreator, setIsCreator] = useState()
   const [currentQuiz, setCurrentQuiz] = useState({})
   const [confirm, setConfirm] = useState(false)
 
   useEffect(() => {
     const decoded = jwt_decode(localStorage.token)
     setCurrentQuiz(props.quiz)
+    decoded.userId === props.quiz.creator_id ? setIsCreator(true) : setIsCreator(false)
   }, [])
 
   const redirect = useNavigate();
@@ -29,20 +30,21 @@ export default function QuizCard(props) {
 
   const editQuiz = async () => {
     const quizToSave = JSON.stringify(currentQuiz)
-    localStorage.setItem("selectedQuiz", quizToSave)
-    props.setAction("create")
+    localStorage.setItem("selectedQuiz", quizToSave),
+      props.setAction ? props.setAction("create") : redirect("/quiz"), localStorage.setItem("fromProfile", true)
   }
 
   const redirectToQuiz = () => {
-    appStorage.setItem("selectedQuiz", quiz);
-    redirect(`/quiz/play/id:${quiz._id}`);
+    const quizToSave = JSON.stringify(currentQuiz)
+    localStorage.setItem("selectedQuiz", quizToSave);
+    redirect(`/playquiz/id:${props.quiz._id}`);
   };
   const id = currentQuiz?.id;
   return (
     <div
       className={Style.container}
       onClick={() => {
-        // redirectToQuiz();
+        !isCreator ? redirectToQuiz() : null
       }}
     >
       <div className={Style.title}>

@@ -7,6 +7,7 @@ import Header from './composants/Header';
 import NotFound from './composants/NotFound';
 import PrivateComponent from './composants/PrivateComponent';
 import Authentification from './pages/Authentification';
+import PlayQuiz from './pages/PlayQuiz';
 import Accueil from './pages/Accueil';
 import Quiz from './pages/Quiz';
 import Profil from './pages/Profil';
@@ -64,6 +65,7 @@ function App() {
               <Route path="/auth" element={<Authentification isLoggedIn={isLoggedIn} />} />
               <Route path="/profile" element={<PrivateComponent isLoggedIn={isLoggedIn} component={Profil} />} />
               <Route path="/quiz" element={<PrivateComponent isLoggedIn={isLoggedIn} component={Quiz} />} />
+              <Route path="/playquiz/:id" element={<PrivateComponent isLoggedIn={isLoggedIn} component={PlayQuiz} />} />
             </Routes>
           </div>}
         </div>

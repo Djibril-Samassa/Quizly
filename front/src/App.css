@@ -3,10 +3,14 @@
   src: url("../public/Poppins/Poppins-Regular.ttf");
 }
 
+* {
+  font-family: "Poppins";
+}
+
 .App {
   min-height: 100vh;
+  max-height: fit-content;
   background-color: #efcb68;
-  font-family: "Poppins";
   /* text-align: center; */
 }
 
@@ -32,6 +36,6 @@
   max-width: 400px;
 }
 
-.technos{
+.technos {
   margin-right: 10em;
 }

@@ -23,11 +23,23 @@ export default function Profil() {
         getQuizzes()
     }, [])
 
-    return (<>
-        <h1>Profil</h1>
-        <h3>
-            Bienvenue {user.username} !
-        </h3>
-        <QuizList list={quizList} />
-    </>)
+    return (< div style={{margin: "0em 5em "}}>
+        <h1>
+            Bienvenue sur votre profil {user.username} !
+        </h1>
+        <br />
+        <div>
+            <h3>Votre profil</h3>
+            <p>Prénom: {user.firstname}</p>
+            <p>Nom: {user.lastname}</p>
+            <p>Adresse e-mail: {user.email}</p>
+            <p>Nom d'utilisateur: {user.username}</p>
+        </div>
+        <br />
+        <div>
+            <h3>Vos Quiz</h3>
+            {quizList?.length >= 1 ? <QuizList list={quizList} fromProfile={true} /> : <h3>Vous n'avez pas encore crée de quiz <a href="/quiz">Créez en un maintenant</a> </h3>}
+
+        </div>
+    </div>)
 }

@@ -1,0 +1,87 @@
+.container {
+  padding: 2em;
+  font-family: "Poppins";
+  background-color: #fff4f0;
+  width: 70%;
+  margin: 3em auto;
+  border: 8px solid #efcb68;
+  border-radius: 5px;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: space-between;
+  width: 50%;
+  margin: 0 auto;
+}
+
+.buttonContainer>span {
+  background-color: #efcb68;
+  border: 3px solid black;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+form>nav {
+  margin-bottom: 2em;
+}
+
+form>nav>li {
+  list-style: none;
+}
+
+.validate {
+  padding: 5px 16px;
+  background-color: #efcb68;
+  margin: 2em 0 0 0;
+  width: fit-content;
+}
+
+.reponseContainer {
+  display: flex;
+  justify-content: space-between;
+  width: 75%;
+}
+
+.reponseContainer>span {
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 5px 16px;
+  border: 3px solid;
+}
+
+.selected {
+  cursor: default;
+  background-color: #efcb68;
+}
+
+.good {
+  background-color: green;
+  color: white;
+  border: 3px solid green;
+}
+
+.wrong {
+  background-color: red;
+  color: white;
+  border: 3px solid red;
+}
+
+.finishChoice {
+  display: flex;
+  justify-content: space-around;
+  margin: 2em 0;
+}
+
+.finishChoice>span {
+  border: 2px solid black;
+  background-color: #efcb68;
+}
+
+.finishChoice>span>a{
+  text-decoration: none;
+  color: black;
+}

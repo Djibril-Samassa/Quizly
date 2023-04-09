@@ -1,3 +1,4 @@
+/*eslint-disable*/
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Style from "./Quiz.module.css"
@@ -9,6 +10,10 @@ export default function Quiz() {
     const [clearStorage, setClearStorage] = useState(false)
     const [quizList, setQuizList] = useState([])
     useEffect(() => {
+        console.log(localStorage.fromProfile)
+        localStorage.fromProfile ? setAction("create") : null
+        window.addEventListener('beforeunload', localStorage.removeItem("fromProfile"))
+        window.removeEventListener('beforeunload', localStorage.removeItem("fromProfile"));
         axios
             .get("http://localhost:8000/quiz")
             .then((res) => {

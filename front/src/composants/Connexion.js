@@ -4,7 +4,7 @@ import axios from "axios";
 import Style from "../pages/Authentification.module.css"
 import { AuthContext } from "../App";
 
-export default function Connexion() {
+export default function Connexion(props) {
     const LogState = useContext(AuthContext)
 
     const redirect = useNavigate()
@@ -32,11 +32,13 @@ export default function Connexion() {
     return (
         <div>
             <form className={Style.formulaire}>
+                {props.didCreateAccount ?
+                    <p style={{ color: 'green' }}>Votre compte a bien été crée</p> : null}
                 <h3 className={Style.formTitle}>Connectez-vous</h3>
                 <span className={Style.inputContainer}>
                     <label for="email">Adresse e-mail</label>
                     <input
-                    value={localStorage.email}
+                        value={localStorage.email}
                         onChange={(e) => {
                             setEmail(e.target.value);
                         }}

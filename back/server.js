@@ -26,23 +26,32 @@ mongoose
 
 /* S'INSCRIRE*/
 app.post("/inscription", async (req, res) => {
+    const { email } = req.body
     const hashedPassword = await bcrypt.hash(req.body.password, 12);
-    try {
-        await User.create({
-            firstname: req.body.firstname,
-            lastname: req.body.lastname,
-            email: req.body.email,
-            username: req.body.username,
-            password: hashedPassword,
+    const user = await User.findOne({ email });
+    if (user) {
+        res.status(401).json({
+            message: "Un compte existe déjà avec cette adresse email",
         });
-    } catch (err) {
-        return res.status(400).json({
-            message: "An error happened. Bad data received.",
+    } else {
+        try {
+            await User.create({
+                firstname: req.body.firstname,
+                lastname: req.body.lastname,
+                email: req.body.email,
+                username: req.body.username,
+                password: hashedPassword,
+            });
+        } catch (err) {
+            return res.status(400).json({
+                message: "Un problème est survenu, veuillez réessayer plus tard.",
+                data: req.body
+            });
+        }
+        res.status(201).json({
+            message: "User crée",
         });
     }
-    res.status(201).json({
-        message: "User crée",
-    });
 });
 
 /*SE CONNECTER*/
@@ -65,6 +74,8 @@ app.post("/connexion", async (req, res) => {
         const token = jwt.sign({
             userId: user._id,
             username: user.username,
+            firstname: user.firstname,
+            lastname: user.lastname,
             email: user.email,
             roles: user.roles,
             permissions: user.permissions
@@ -122,20 +133,14 @@ app.post("/quiz/create", (req, res) => {
 });
 
 /*MODIFIER UN QUIZ*/
-app.post("/quiz/edit", (req, res) => {
-    Quiz.findOneAndUpdate(
-        { _id: req.body.quizId }, // Critères de recherche (dans cet exemple, l'ID du quiz)
-        {
-            title: req.body.title,
-            about: req.body.about,
-            description: req.body.description,
-            questions: req.body.questions,
-        }, // Nouvelles données à mettre à jour
-        { new: true } // Options de la requête (dans cet exemple, retourner le document mis à jour)
-    ).then((updatedQuiz) => {
-    }).catch((error) => {
-        console.log("Une erreur s'est produite :", error);
-    });
+app.put("/quiz/update", (req, res) => {
+    const id = req.body._id
+    const newData = req.body
+    Quiz.findByIdAndUpdate(id, newData, { new: true })
+        .then((newVersion) => {
+            res.send(newVersion)
+        })
+        .catch((err) => { console.log(err), res.status(500).json({ error: 'Erreur lors de la mise à jour du quiz' }) })
 });
 
 
