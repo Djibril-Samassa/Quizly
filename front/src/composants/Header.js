@@ -21,7 +21,6 @@ export default function Header() {
             <nav className={Style.nav}>
                 <li><a href="/">Accueil</a></li>
                 <li><a href="/quiz">Quiz</a></li>
-                <li><a href="/">A propos de moi</a></li>
                 <li><a href="/profile">Profil</a></li>
             </nav>
             <span onClick={() => { handleLogout() }} className={`${Style.logout} button`}>Se déconnecter</span>

@@ -39,3 +39,11 @@
 .technos {
   margin-right: 10em;
 }
+
+.edit{
+  cursor: pointer;
+  padding: 9px 15px;
+  background-color: #f1f1f1;
+  border-radius: 5px;
+  cursor: pointer;
+}
