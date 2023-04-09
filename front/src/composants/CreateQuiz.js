@@ -5,36 +5,47 @@ import jwt_decode from "jwt-decode"
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-export default function CreateQuiz() {
-    const [decodedToken, setDecodedToken] = useState()
-    const [test, setTest] = useState({})
-
+export default function CreateQuiz(props) {
+    const [counter, setCounter] = useState(0)
     const [question, setQuestion] = useState({});
+    const [isEditing, setIsEditing] = useState(false)
+    const [didUpdated, setDidUpdated] = useState(false)
     const [state, setState] = useState({
-        questions: [],
-        user_id: null
+        user_id: null,
+        questions: []
     });
     const [choosen, setChoosen] = useState();
     const [finish, setFinish] = useState(false);
+    const [isNotEmpty, setIsNotEmpty] = useState(false)
     const redirect = useNavigate();
 
     useEffect(() => {
         const decoded = jwt_decode(localStorage.token)
-        setDecodedToken(decoded)
         const checkStorage = () => {
             const localQuiz = JSON.parse(localStorage.getItem('selectedQuiz'))
-            setTest(localQuiz)
+            localStorage.selectedQuiz ? (setQuestion(localQuiz.questions[counter]), setIsEditing(true), setDidUpdated(true), setState(localQuiz)) : setState({ ...state, user_id: decoded.userId })
         }
         checkStorage()
     }, [])
 
     useEffect(() => {
-        console.log(test)
-    }, [test])
+        props.clear ? (setState({ ...state, title: '', sujet: '', description: '' }), setQuestion({}), setCounter(0), setIsEditing(false)) : null
+        console.log(props.clear, state)
+    }, [props])
+
+    useEffect(() => { console.log(state) }, [state])
 
     useEffect(() => {
-        setState({ ...state, user_id: decodedToken?.userId })
-    }, [decodedToken])
+        question.question &&
+            question.reponseA &&
+            question.reponseB &&
+            question.reponseC &&
+            question.reponseD ? setIsNotEmpty(true) : setIsNotEmpty(false)
+    }, [question, state, counter, finish, choosen])
+
+    useEffect(() => {
+        isEditing ? setQuestion(state?.questions[counter]) : null
+    }, [counter])
 
     const handleCheckResponses = (reponse) => {
         setQuestion({
@@ -42,16 +53,24 @@ export default function CreateQuiz() {
             bonneReponse: reponse,
         });
         setChoosen(reponse);
-        state.questions.length >= 3 ? setFinish(true) : null;
+        state?.questions?.length >= 3 ? setFinish(true) : null;
     };
 
     const handleNext = async () => {
         const lastQ = await question;
-        state.questions.push(lastQ);
-        setQuestion({});
+        isEditing ?
+            counter + 1 >= state.questions.length ? (state.questions.push(lastQ),
+                setQuestion({}), setIsEditing(false)) : state.questions.splice(counter, 1, lastQ)
+            : (state.questions.push(lastQ), setIsEditing(false),
+                setQuestion({}))
         setChoosen(null);
         setFinish(null);
+        setCounter(counter + 1)
     };
+
+    useEffect(() => {
+
+    }, [])
 
     const handleValidateQuiz = () => {
         state.questions.push(question);
@@ -60,15 +79,20 @@ export default function CreateQuiz() {
             state.about &&
             state.questions.length >= 4 &&
             state.user_id !== null
-            ? axios
-                .post("http://localhost:8000/quiz/create", state)
-                .then((res) => {
-                    alert("Votre quiz a bien été créé ✅");
-                    window.location.reload()
-                })
-                .catch((err) => {
-                    console.log(err);
-                })
+            ?
+            didUpdated ?
+                null
+                /* ROUTE DE MODIF */
+                :
+                axios
+                    .post("http://localhost:8000/quiz/create", state)
+                    .then((res) => {
+                        alert("Votre quiz a bien été créé ✅");
+                        window.location.reload()
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    })
             : alert(
                 "Veuillez remplir tous les champs à propos du formulaire(à gauche)"
             );
@@ -76,12 +100,14 @@ export default function CreateQuiz() {
     return (
         <div className="pageContainer">
             <form className={Style.formulaire}>
-                <h1 className={Style.formTitle}>Créer votre Quiz ✏️</h1>
+                <h1 className={Style.formTitle}>{isEditing ? 'Modifiez' : 'Créer'} votre Quiz ✏️</h1>
+                {isEditing ? <p>Re-cliquez sur "Créer votre quiz" pour en créer un nouveau</p> : null}
                 <div className={Style.blocsContainer}>
                     <div className={Style.spanContainer}>
                         <span>
                             <label for="title">Titre du Quiz</label>
                             <input
+                                value={state.title}
                                 className={Style.input}
                                 onChange={(e) => setState({ ...state, title: e.target.value })}
                                 type="text"
@@ -92,6 +118,7 @@ export default function CreateQuiz() {
                         <span>
                             <label for="title">Sujet du Quiz</label>
                             <input
+                                value={state.about}
                                 className={Style.input}
                                 onChange={(e) => setState({ ...state, about: e.target.value })}
                                 type="text"
@@ -102,6 +129,7 @@ export default function CreateQuiz() {
                         <span>
                             <label for="title">Description</label>
                             <textarea
+                                value={state.description}
                                 className={Style.descriptionInput}
                                 onChange={(e) =>
                                     setState({ ...state, description: e.target.value })
@@ -114,14 +142,14 @@ export default function CreateQuiz() {
                     <span className={Style.line}></span>
                     <div className={Style.secondContainer}>
                         <p className={Style.formTitle}>
-                            {state?.questions?.length} questions renseignées sur un minimum
+                            {counter + 1} questions renseignées sur un minimum
                             de 4
                         </p>
                         <span className={Style.question}>
                             <label for="title">Question</label>
                             <input
                                 className={Style.input}
-                                value={question.question ? question.question : ""}
+                                value={question?.question ? question?.question : ""}
                                 onChange={(e) =>
                                     setQuestion({ ...question, question: e.target.value })
                                 }
@@ -174,11 +202,7 @@ export default function CreateQuiz() {
                                 />
                             </span>
                         </div>
-                        {question.question &&
-                            question.reponseA &&
-                            question.reponseB &&
-                            question.reponseC &&
-                            question.reponseD ? (
+                        {isNotEmpty ? (
                             <span className={Style.reponseSelector}>
                                 <h3>Quelle est la bonne réponse ?</h3>
                                 {choosen === question.reponseA ? (
@@ -252,7 +276,7 @@ export default function CreateQuiz() {
                                         }}
                                         className={`onHover ${Style.next}`}
                                     >
-                                        Ajouter la question et terminer
+                                        Ajouter la question et {didUpdated ? "sauvegarder les modifications" : "creér le quiz"}
                                     </span>
                                 ) : null}
                             </div>

@@ -7,6 +7,10 @@ import axios from "axios";
 
 export default function QuizList(props) {
 
+  useEffect(()=>{
+    props.clear(false)
+  },[])
+
   return (
     <div className={Style.container}>
       <div className={Style.list}>

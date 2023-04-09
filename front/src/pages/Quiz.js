@@ -6,6 +6,7 @@ import CreateQuiz from "../composants/CreateQuiz";
 
 export default function Quiz() {
     const [action, setAction] = useState("play")
+    const [clearStorage, setClearStorage] = useState(false)
     const [quizList, setQuizList] = useState([])
     useEffect(() => {
         axios
@@ -17,12 +18,19 @@ export default function Quiz() {
                 console.log(err);
             });
     }, []);
+
+    const create = () => {
+        localStorage.removeItem('selectedQuiz')
+        setClearStorage(true)
+        setAction("create")
+    }
+
     return (<div className={Style.container}>
         <div className={Style.option}>
             <h2 className={`button ${action === "play" ? Style.selected : null}`} onClick={() => { setAction("play") }}>Jouer</h2>
-            <h2 className={`button ${action === "create" ? Style.selected : null}`} onClick={() => { setAction("create") }}>Créer votre Quiz</h2>
+            <h2 className={`button ${action === "create" ? Style.selected : null}`} onClick={() => { create() }}>Créer votre Quiz</h2>
         </div>
         {action === "create" ?
-            <CreateQuiz /> : action === "play" ? <QuizList setAction={setAction} list={quizList} /> : null}
+            <CreateQuiz clear={clearStorage} action={action} setAction={setAction} /> : action === "play" ? <QuizList clear={setClearStorage} setAction={setAction} list={quizList} /> : null}
     </div>)
 }
