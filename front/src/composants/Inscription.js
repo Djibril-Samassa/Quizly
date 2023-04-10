@@ -31,7 +31,7 @@ export default function Inscription(props) {
         event.preventDefault()
         userData.firstname && userData.lastname && userData.email && userData.username && userData.password.length >= 8 && passwordMatch
             ? axios
-                .post("http://localhost:8000/inscription", data)
+                .post("https://nameless-spire-39708.herokuapp.com/inscription", data)
                 .then((res) => {
                     props.setDidCreateAccount(true)
                     props.setAction("connexion")
