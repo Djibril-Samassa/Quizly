@@ -86,7 +86,7 @@ export default function CreateQuiz(props) {
             ?
             didUpdated ?
                 axios
-                    .put("http://localhost:8000/quiz/update", state)
+                    .put("https://quizlybydjibril.herokuapp.com/quiz/update", state)
                     .then((res) => {
                         alert("Votre quiz a bien été modifié ✅");
                         localStorage.removeItem("fromProfile")
@@ -99,7 +99,7 @@ export default function CreateQuiz(props) {
                     })
                 :
                 axios
-                    .post("http://localhost:8000/quiz/create", state)
+                    .post("https://quizlybydjibril.herokuapp.com/quiz/create", state)
                     .then((res) => {
                         alert("Votre quiz a bien été créé ✅");
                         window.location.reload()

@@ -15,7 +15,7 @@ export default function Quiz() {
         window.addEventListener('beforeunload', localStorage.removeItem("fromProfile"))
         window.removeEventListener('beforeunload', localStorage.removeItem("fromProfile"));
         axios
-            .get("http://localhost:8000/quiz")
+            .get("https://quizlybydjibril.herokuapp.com/quiz")
             .then((res) => {
                 setQuizList(res.data);
             })

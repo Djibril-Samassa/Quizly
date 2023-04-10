@@ -21,7 +21,7 @@ export default function QuizCard(props) {
 
   const deleteQuiz = () => {
     const id = currentQuiz._id
-    axios.get(`http://localhost:8000/quiz/delete/${id}`)
+    axios.get(`https://quizlybydjibril.herokuapp.com/quiz/delete/${id}`)
       .then((res) => { console.log(res) })
       .catch((err) => { console.log(err) })
     setCurrentQuiz({}),

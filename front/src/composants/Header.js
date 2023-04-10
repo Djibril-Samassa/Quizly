@@ -10,7 +10,7 @@ export default function Header() {
     const LogState = useContext(AuthContext)
     const redirect = useNavigate()
     const handleLogout = async () => {
-        await axios.get("http://localhost:8000/logout")
+        await axios.get("https://quizlybydjibril.herokuapp.com/logout")
             .then(() => { LogState.logOut(), localStorage.clear() })
             .then(() => { redirect("/") })
     }

@@ -48,7 +48,7 @@ export default function Profil() {
         setConfirmPw(decoded.password)
         async function getQuizzes() {
             try {
-                const rep = await axios.get(`http://localhost:8000/quiz/${decoded.userId}`)
+                const rep = await axios.get(`https://quizlybydjibril.herokuapp.com/quiz/${decoded.userId}`)
                 setQuizList(rep.data)
             } catch (err) {
                 console.log(err)
@@ -60,7 +60,7 @@ export default function Profil() {
     const validateEdit = (data) => {
         event.preventDefault()
         axios
-            .put('http://localhost:8000/profile/update', data)
+            .put('https://quizlybydjibril.herokuapp.com/profile/update', data)
             .then(async (res) => {
                 await localStorage.setItem('token', res.data);
                 setEdit(false)
@@ -72,7 +72,7 @@ export default function Profil() {
 
     const handleDeleteAccount = () => {
         axios
-            .delete(`http://localhost:8000/user/delete/${userData._id}`)
+            .delete(`https://quizlybydjibril.herokuapp.com/user/delete/${userData._id}`)
             .then(() => {
                 alert('compte supprimé')
                 window.location.reload()

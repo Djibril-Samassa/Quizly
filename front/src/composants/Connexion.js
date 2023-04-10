@@ -18,7 +18,7 @@ export default function Connexion(props) {
     };
     const handleLogin = (data) => {
         axios
-            .post("http://localhost:8000/connexion", data)
+            .post("https://quizlybydjibril.herokuapp.com/connexion", data)
             .then(async (res) => {
                 await localStorage.setItem('token', res.data);
                 LogState.logIn()

@@ -13,6 +13,12 @@ app.use(cors());
 app.use(express.static("public"));
 const secret = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
 
+app.use(cors({
+    origin: 'https://quizly-by-djibril.netlify.app',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    optionsSuccessStatus: 200
+}));
+
 mongoose
     .connect(
 
