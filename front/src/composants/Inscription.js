@@ -33,6 +33,7 @@ export default function Inscription(props) {
             ? axios
                 .post("https://quizlybydjibril.herokuapp.com/inscription", data,)
                 .then((res) => {
+                    console.log(res)
                     props.setDidCreateAccount(true)
                     props.setAction("connexion")
                     localStorage.setItem("email", email)
