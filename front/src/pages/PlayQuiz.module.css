@@ -81,7 +81,22 @@ form>nav>li {
   background-color: #efcb68;
 }
 
-.finishChoice>span>a{
+.finishChoice>span>a {
   text-decoration: none;
   color: black;
+}
+
+@media screen and (max-width: 1200px) {
+
+  .buttonContainer,
+  .reponseContainer,
+  .finishChoice {
+    flex-direction: column;
+  }
+
+  .buttonContainer>span,
+  .reponseContainer>span,
+  .finishChoice>span {
+    margin: 5px 0px;
+  }
 }

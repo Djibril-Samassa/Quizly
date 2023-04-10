@@ -6,7 +6,7 @@
 }
 
 .logo {
-    width: 10%;
+    width: 100px;
 }
 
 .nav {
@@ -38,4 +38,28 @@
 .logout:hover {
     background-color: #c04343;
     color: #f1f1f1;
+}
+
+@media screen and (max-width: 1200px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .logout {
+        position: absolute;
+        top: 10;
+        right: 0;
+        margin-right: 15px;
+    }
+
+    .logo {
+        position: absolute;
+        top: 10;
+        left: 0;
+        margin-left: 15px;
+    }
+
+    .nav{
+        margin-top: 80px;
+    }
 }

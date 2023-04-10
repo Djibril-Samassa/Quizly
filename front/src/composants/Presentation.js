@@ -8,7 +8,7 @@ export default function Presentation() {
                 Rejoignez la communaté Quizly et jouer à des Quiz, <br /><br />
                 Créez aussi les vôtres et atteignez le meilleur rang au classement
             </p>
-            <img className="image" src="grouper.png" />
+            <img className={`image ${Style.img}`} src="grouper.png" />
         </div>
     )
 }

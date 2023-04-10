@@ -5,4 +5,11 @@
 .list {
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+@media screen and (max-width: 1200px) {
+  .list{
+    flex-direction: column;
+  }
 }

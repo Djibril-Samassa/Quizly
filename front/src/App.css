@@ -11,7 +11,7 @@
   min-height: 100vh;
   max-height: fit-content;
   background-color: #efcb68;
-  /* text-align: center; */
+  padding: 10px 0px;
 }
 
 .yellow {
@@ -40,10 +40,25 @@
   margin-right: 10em;
 }
 
-.edit{
+.edit {
   cursor: pointer;
   padding: 9px 15px;
   background-color: #f1f1f1;
   border-radius: 5px;
   cursor: pointer;
+}
+
+.page {
+  padding: 0em 5em;
+  min-height: 100vh;
+}
+
+
+.deleteAccount {
+  color: #f1f1f1;
+  background-color: rgb(253, 57, 57);
+}
+
+.cancel{  
+  background-color: #f1f1f1;
 }

@@ -1,0 +1,53 @@
+.formulaire>span {
+    display: flex;
+    flex-direction: column;
+    width: 20%;
+    margin: 10px 0;
+}
+
+.formulaire>span>label {
+    margin-bottom: 2px;
+}
+
+.formulaire>span>input {
+    border: none;
+    padding: 8px;
+    border-radius: 5px;
+}
+
+.formulaire>button {
+    border: none;
+    font-size: 16px;
+    border-radius: 5px;
+    padding: 9px 15px;
+    width: fit-content;
+}
+
+.accountBtn {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    justify-content: space-between;
+    width: 30%;
+}
+
+.accountBtn>span {
+    margin: 0px 5px;
+  }
+
+@media screen and (max-width: 1200px) {
+    .accountBtn {
+        display: flex;
+        align-items: flex-start;
+        flex-direction: column;
+        width: 50%;
+    }
+
+    .accountBtn>span {
+        margin: 10px 0px;
+      }
+
+      .formulaire>span{
+        width: 100%;
+      }
+}

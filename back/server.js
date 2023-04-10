@@ -54,6 +54,43 @@ app.post("/inscription", async (req, res) => {
     }
 });
 
+/* MODIFIER UN UTILISATEUR */
+app.put("/profile/update", async (req, res) => {
+    const id = req.body._id
+    const { firstname, lastname, username, email } = req.body
+    const hashedPassword = await bcrypt.hash(req.body.password, 12);
+    const newData = {
+        firstname: firstname,
+        lastname: lastname,
+        email: email,
+        username: username,
+        password: hashedPassword,
+    }
+    User.findByIdAndUpdate(id, newData, { new: true })
+        .then(async (newData) => {
+            res.clearCookie("jwt");
+            const token = await jwt.sign({
+                userId: newData._id,
+                username: newData.username,
+                firstname: newData.firstname,
+                lastname: newData.lastname,
+                email: newData.email,
+            }, secret, { expiresIn: '5h' });
+            res.cookie("jwt", token, { httpOnly: true, secure: false });
+            res.send(token);
+        })
+        .catch((err) => { console.log(err), res.status(500).json({ error: 'Erreur lors de la mise à jour de votre profil' }) })
+});
+
+app.delete('/user/delete/:userId', async (req, res) => {
+    try {
+        await User.deleteOne({ _id: req.params.userId });
+        res.status(201).json({ message: 'Votre compte a été supprimé' });
+    } catch (err) {
+        res.status(500).json({ message: 'Erreur serveur' });
+    }
+})
+
 /*SE CONNECTER*/
 app.post("/connexion", async (req, res) => {
     const { email, password } = req.body;
@@ -77,8 +114,6 @@ app.post("/connexion", async (req, res) => {
             firstname: user.firstname,
             lastname: user.lastname,
             email: user.email,
-            roles: user.roles,
-            permissions: user.permissions
         }, secret, { expiresIn: '5h' });
         res.cookie("jwt", token, { httpOnly: true, secure: false });
         res.send(token);
@@ -88,19 +123,6 @@ app.post("/connexion", async (req, res) => {
         });
     }
 });
-
-app.get('/api/checkToken', (req, res) => {
-    const token = req.headers.authorization.split(' ')[1];
-
-    jwt.verify(token, secret, (err, decodedToken) => {
-        if (err) {
-            res.sendStatus(401);
-        } else {
-            res.sendStatus(200);
-        }
-    });
-});
-
 
 
 /*SE DECONNECTER*/
@@ -137,8 +159,8 @@ app.put("/quiz/update", (req, res) => {
     const id = req.body._id
     const newData = req.body
     Quiz.findByIdAndUpdate(id, newData, { new: true })
-        .then((newVersion) => {
-            res.send(newVersion)
+        .then(() => {
+            res.status(201).json({ message: "Votre quiz à été modifié avec succès" })
         })
         .catch((err) => { console.log(err), res.status(500).json({ error: 'Erreur lors de la mise à jour du quiz' }) })
 });
@@ -166,6 +188,7 @@ app.get('/quiz/delete/:quizId', async (req, res) => {
         res.status(500).json({ message: 'Erreur serveur' });
     }
 })
+
 
 /*RECUPERER LISTE DE QUIZ CREE PAR L'UTILISATEUR*/
 app.get('/quiz/:userId', async (req, res) => {

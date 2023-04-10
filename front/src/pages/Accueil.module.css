@@ -23,3 +23,25 @@
 .content>div:nth-child(1) {
     max-width: 80%;
 }
+
+@media screen and (max-width: 1400px) {
+    .content>div:nth-child(1) {
+        max-width: 100%;
+    }
+}
+
+@media screen and (max-width: 1200px) {
+    .content {
+        margin: 0px auto;
+    }
+
+    .content>div {
+        display: flex;
+        flex-direction: column-reverse;
+        justify-content: center;
+    }
+
+    .img {
+        display: none;
+    }
+}

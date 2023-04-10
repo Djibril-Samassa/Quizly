@@ -17,6 +17,7 @@ export default function Authentification(props) {
     return (
 
         <div className={Style.pageContainer} >
+            <Presentation />
             <div>
                 {action === "inscription" ? <Inscription setDidCreateAccount={setDidCreateAccount} setAction={setAction} /> : action === "connexion" ? <Connexion didCreateAccount={didCreateAccount} /> : null}
                 {action === "inscription" ?
@@ -25,7 +26,6 @@ export default function Authentification(props) {
                         <p>Vous n'avez pas de compte ? <span className={Style.link} onClick={() => { setAction('inscription') }}>Inscrivez vous</span></p>
                         : null}
             </div>
-            <Presentation />
         </div>
     )
 }
